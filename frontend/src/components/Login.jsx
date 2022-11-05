@@ -1,20 +1,16 @@
 import React from "react";
-import { useEffect } from "react";
+import GoogleLogin from "react-google-login";
 import { useNavigate } from "react-router-dom";
-import { client } from "../clients";
-import { GoogleLogin } from "react-google-login";
 import { FcGoogle } from "react-icons/fc";
-import { gapi } from "gapi-script";
-import Share from "../asset/share.mp4";
+import shareVideo from "../asset/share.mp4";
+import logo from "../asset/MyLogo.png";
+import { client } from "../clients";
 
 const Login = () => {
   const navigate = useNavigate();
   const responseGoogle = (response) => {
-    console.log(response);
     localStorage.setItem("user", JSON.stringify(response.profileObj));
-
     const { name, googleId, imageUrl } = response.profileObj;
-
     const doc = {
       _id: googleId,
       _type: "user",
@@ -25,51 +21,41 @@ const Login = () => {
       navigate("/", { replace: true });
     });
   };
-  const clientId =
-    "419761767609-064i8gul4ua4vhtufjgimpviupantjpc.apps.googleusercontent.com";
-  useEffect(() => {
-    gapi.load("client:auth2", () => {
-      gapi.auth2.init({ clientId: clientId });
-    });
-  });
+
   return (
-    <div className="flex items-center justify-start flex-col h-screen">
-      <div className="relative w-full h-full">
+    <div className="flex justify-start items-center flex-col h-screen">
+      <div className=" relative w-full h-full">
         <video
-          src={Share}
+          src={shareVideo}
           type="video/mp4"
           loop
-          muted
           controls={false}
+          muted
           autoPlay
           className="w-full h-full object-cover"
         />
-        <div className="absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay">
+
+        <div className="absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0    bg-blackOverlay">
           <div className="p-5">
-            <img
-              src={
-                "https://res.cloudinary.com/cheloytec/image/upload/v1665333620/online-shop/MyLogo_rsmioy.png"
-              }
-              alt="Logo"
-              width={"200"}
-              height="auto"
-            />
+            <img src={logo} alt="logo" width="130px" />
           </div>
+
           <div className="shadow-2xl">
             <GoogleLogin
+              clientId={`318119434904-fi5m2pgauqvv9pfmlcm15621vcovig6m.apps.googleusercontent.com`}
               render={(renderProps) => (
                 <button
                   type="button"
-                  className="bg-mainColor flex justify-center items-center p-3 rounded-lg outline-none cursor-pointer"
+                  className="bg-mainColor flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none"
                   onClick={renderProps.onClick}
                   disabled={renderProps.disabled}
                 >
-                  <FcGoogle className="mr-4" /> Sign in with Google
+                  <FcGoogle className="mr-4" /> Sign in with google
                 </button>
               )}
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
-              cookiePolicy="single-host-origin"
+              cookiePolicy="single_host_origin"
             />
           </div>
         </div>
